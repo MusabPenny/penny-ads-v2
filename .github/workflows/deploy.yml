@@ -8,6 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: self-hosted
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -39,9 +40,8 @@ jobs:
           DB_PORT: ${{ secrets.DB_PORT }}
           DB_SERVER: ${{ secrets.DB_HOST }}
 
-
-      # Start or create PM2 service as admin
-      - name: Start PM2 service with admin rights
+      # Start or create PM2 processes
+      - name: Start or restart apps with PM2
         shell: powershell
         run: |
           $apps = @(
@@ -56,12 +56,12 @@ jobs:
             $exists = npx pm2 list | Select-String $app.name
             if (-not $exists) {
                 Write-Host "App not found in PM2, starting..."
-                Start-Process powershell -Verb runAs -ArgumentList "npx pm2 start $($app.cwd)\$($app.script) --name $($app.name) -- $($app.args)"
+                npx pm2 start "$($app.cwd)\$($app.script)" --name $($app.name) -- $($app.args)
             } else {
                 Write-Host "App already exists in PM2, restarting..."
-                Start-Process powershell -Verb runAs -ArgumentList "npx pm2 restart $($app.name)"
+                npx pm2 restart $($app.name)
             }
           }
 
           # Save PM2 process list to startup
-          Start-Process powershell -Verb runAs -ArgumentList "npx pm2 save"
+          npx pm2 save
