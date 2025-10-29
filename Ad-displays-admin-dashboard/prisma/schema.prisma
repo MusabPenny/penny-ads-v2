@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model clients {
+  id                   Int              @id @default(autoincrement())
+  mac_address          String           @db.VarChar(30)
+  ip_address           String?          @db.VarChar(20)
+  connecting_timestamp DateTime?        @db.DateTime
+  client_location      String?          @db.VarChar(20)
+  socketId             String?          @db.VarChar(50)
+  connected            Boolean?
+  enableWakeOnLan      Boolean?
+  images_clients       images_clients[]
+}
+
+model images {
+  id                     Int              @id @default(autoincrement())
+  filename               String           @db.VarChar(100)
+  isActive               Boolean          @default(true)
+  updatedAt              DateTime         @updatedAt @db.DateTime
+  isImageForAllLocations Boolean?
+  isImageForAllPos       Boolean?
+  expirationDate         DateTime?        @db.DateTime
+  createdAt              DateTime         @default(now()) @db.DateTime
+  fileSize               String?          @db.VarChar(20)
+  fileType               String           @db.VarChar(20)
+  groupName              String?          @db.VarChar(100)
+  originalName           String?          @db.VarChar(100)
+  imageUrl                String?         @db.VarChar(256)
+  images_clients         images_clients[]
+}
+
+model images_clients {
+  image_id            Int
+  client_id           Int
+  isClientImageActive Boolean?
+  client              clients  @relation(fields: [client_id], references: [id])
+  image               images   @relation(fields: [image_id], references: [id])
+
+  @@id([image_id, client_id])
+}
+
+model role_types {
+  id        Int     @id(map: "RoleType_pkey") @default(autoincrement())
+  role_name String  @unique(map: "UQ__role_typ__783254B127198EFD") @db.VarChar(50)
+  roles     roles[]
+}
+
+model roles {
+  id         Int        @id(map: "UserRoles_pkey") @default(autoincrement())
+  user_id    Int
+  role_id    Int
+  created_at DateTime?  @default(now(), map: "DF__roles__created_a__619B8048") @db.DateTime
+  updated_at DateTime?  @default(now(), map: "DF__roles__updated_a__628FA481") @db.DateTime
+  role_types role_types @relation(fields: [role_id], references: [id], onUpdate: NoAction, map: "FK_UserRoles_Role")
+  users      users      @relation(fields: [user_id], references: [id], onUpdate: NoAction, map: "FK_UserRoles_User")
+}
+
+model users {
+  id        Int      @id(map: "User_pkey") @default(autoincrement())
+  email     String   @unique(map: "User_email_key") @db.VarChar(255)
+  password  String   @db.VarChar(255)
+  name      String?  @db.VarChar(100)
+  createdAt DateTime @default(now(), map: "User_createdAt_df") @db.DateTime
+  updatedAt DateTime @db.DateTime
+  isActive  Boolean  @default(true, map: "User_isActive_df")
+  roles     roles[]
+}
