@@ -56,10 +56,10 @@ jobs:
             $exists = pm2 list | Select-String $app.name
             if (-not $exists) {
                 Write-Host "App not found in PM2, starting..."
-                Start-Process powershell -Verb runAs -ArgumentList "pm2 start $($app.cwd)\$($app.script) --name $($app.name) -- $($app.args)"
+                Start-Process powershell -Verb runAs -ArgumentList "npx pm2 start $($app.cwd)\$($app.script) --name $($app.name) -- $($app.args)"
             } else {
                 Write-Host "App already exists in PM2, restarting..."
-                Start-Process powershell -Verb runAs -ArgumentList "pm2 restart $($app.name)"
+                Start-Process powershell -Verb runAs -ArgumentList "npx pm2 restart $($app.name)"
             }
           }
 
