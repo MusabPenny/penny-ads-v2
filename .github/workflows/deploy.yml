@@ -53,7 +53,7 @@ jobs:
             Write-Host "Processing app: $($app.name)"
 
             # Check if PM2 process exists
-            $exists = pm2 list | Select-String $app.name
+            $exists = npx pm2 list | Select-String $app.name
             if (-not $exists) {
                 Write-Host "App not found in PM2, starting..."
                 Start-Process powershell -Verb runAs -ArgumentList "npx pm2 start $($app.cwd)\$($app.script) --name $($app.name) -- $($app.args)"
@@ -64,4 +64,4 @@ jobs:
           }
 
           # Save PM2 process list to startup
-          Start-Process powershell -Verb runAs -ArgumentList "pm2 save"
+          Start-Process powershell -Verb runAs -ArgumentList "npx pm2 save"
