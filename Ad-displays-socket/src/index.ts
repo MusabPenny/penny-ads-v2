@@ -42,6 +42,6 @@ app.get("/", async (req, res) => {
   res.send(imageUrls);
 });
 
-server.listen(7008, () => {
+server.listen(7010, () => {
   console.log("Server is running on http://localhost:7010");
 });
