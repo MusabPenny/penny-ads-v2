@@ -45,8 +45,8 @@ jobs:
         shell: powershell
         run: |
           # Start apps
-          npx pm2 start ./Ad-displays-admin-dashboard/start-dashboard.cmd --name ad-dashboard
-          npx pm2 start ./Ad-displays-socket/start-socket.cmd --name ad-socket
+          npx pm2 start ./Ad-displays-admin-dashboard/start-dashboard.cmd --name ad-dashboard --interpreter cmd
+          npx pm2 start ./Ad-displays-socket/start-socket.cmd --name ad-socket --interpreter cmd
 
           # Save PM2 process list for startup
           npx pm2 save
