@@ -2,7 +2,7 @@
 
 import { io } from "socket.io-client";
 
-export const socket = io("http://localhost:7008");
+export const socket = io(`http://${process.env.NEXT_PUBLIC_BASE_URL}`);
 
 socket.on("connect", () => {
   console.log("Connected to socket server");

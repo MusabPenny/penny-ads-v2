@@ -1,0 +1,58 @@
+name: Deploy server and socket for AD Displays
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22.16.0'
+
+      # Build Admin Dashboard
+      - name: Install dependencies and build admin dashboard
+        working-directory: ./Ad-displays-admin-dashboard
+        run: |
+          npm install
+          npm run build
+
+      # Build Socket App
+      - name: Install dependencies and build socket app
+        working-directory: ./Ad-displays-socket
+        run: |
+          npm install
+          npm run build
+
+      # Start or create PM2 service as admin
+      - name: Start PM2 service with admin rights
+        shell: powershell
+        run: |
+          $apps = @(
+            @{name="ad-dashboard"; cwd="$PWD\Ad-displays-admin-dashboard"; script="npm"; args="start"},
+            @{name="ad-socket"; cwd="$PWD\Ad-displays-socket"; script="npm"; args="run start"}
+          )
+
+          foreach ($app in $apps) {
+            Write-Host "Processing app: $($app.name)"
+
+            # Check if PM2 process exists
+            $exists = pm2 list | Select-String $app.name
+            if (-not $exists) {
+                Write-Host "App not found in PM2, starting..."
+                Start-Process powershell -Verb runAs -ArgumentList "pm2 start $($app.cwd)\$($app.script) --name $($app.name) -- $($app.args)"
+            } else {
+                Write-Host "App already exists in PM2, restarting..."
+                Start-Process powershell -Verb runAs -ArgumentList "pm2 restart $($app.name)"
+            }
+          }
+
+          # Save PM2 process list to startup
+          Start-Process powershell -Verb runAs -ArgumentList "pm2 save"

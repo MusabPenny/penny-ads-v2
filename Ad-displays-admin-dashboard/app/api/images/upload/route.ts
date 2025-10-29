@@ -24,11 +24,9 @@ export async function POST(request: NextRequest) {
       // Directory might already exist
     }
 
-    const baseUrl = 'http://10.20.10.50:7007'
-     /*const baseUrl =
-      process.env.NEXT_PUBLIC_BASE_URL ||
-      `${request.nextUrl.protocol}//${request.headers.get("host")}`
-*/
+     const baseUrl =
+      process.env.NEXT_PUBLIC_BASE_URL || `${request.nextUrl.protocol}//${request.headers.get("host")}`
+
     const uploadedImages = []
 
     for (let i = 0; i < files.length; i++) {

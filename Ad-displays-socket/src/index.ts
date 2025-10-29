@@ -43,5 +43,5 @@ app.get("/", async (req, res) => {
 });
 
 server.listen(7008, () => {
-  console.log("Server is running on http://localhost:7008");
+  console.log("Server is running on http://localhost:7010");
 });
