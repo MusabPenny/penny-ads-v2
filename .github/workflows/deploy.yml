@@ -45,8 +45,8 @@ jobs:
         shell: powershell
         run: |
           # Start apps
-          npx pm2 start "cmd /c npm run dev" --name ad-dashboard --cwd "./Ad-displays-admin-dashboard"
-          npx pm2 start "cmd /c npm run dev" --name ad-socket --cwd "./Ad-displays-socket"
+          npx pm2 start "npm run dev" --name ad-dashboard --cwd "./Ad-displays-admin-dashboard" --interpreter "powershell"
+          npx pm2 start "npm run dev" --name ad-socket --cwd "./Ad-displays-socket" --interpreter "powershell"
 
           # Save PM2 process list for startup
           npx pm2 save
