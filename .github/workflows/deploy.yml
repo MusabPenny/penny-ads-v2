@@ -42,9 +42,16 @@ jobs:
 
       # Start or create PM2 processes
       - name: Start apps with PM2
-        shell: powershell
+        shell: cmd
         run: |
-          # Start apps
-          npx pm2 start ./Ad-displays-admin-dashboard/node_modules/.bin/next --name ad-dashboard -- start -p 7009 -H 0.0.0.0 --cwd ./Ad-displays-admin-dashboard
-          npx pm2 start ./Ad-displays-socket/node_modules/.bin/ts-node --name ad-socket -- src/index.ts --cwd ./Ad-displays-socket
-          npx pm2 save
+          REM Navigate to GitHub workspace
+          cd %GITHUB_WORKSPACE%
+
+          REM Start Admin Dashboard via CMD script
+          pm2 start Ad-displays-admin-dashboard\start-dashboard.cmd --name ad-dashboard --interpreter cmd
+
+          REM Start Socket App via CMD script
+          pm2 start Ad-displays-socket\start-socket.cmd --name ad-socket --interpreter cmd
+
+          REM Save PM2 process list for startup
+          pm2 save
