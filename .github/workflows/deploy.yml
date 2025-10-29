@@ -23,6 +23,8 @@ jobs:
         run: |
           npm install
           npm run build
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
       # Build Socket App
       - name: Install dependencies and build socket app
@@ -30,6 +32,13 @@ jobs:
         run: |
           npm install
           npm run build
+        env:
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_SERVER: ${{ secrets.DB_HOST }}
+
 
       # Start or create PM2 service as admin
       - name: Start PM2 service with admin rights

@@ -2,7 +2,7 @@ const sql = require("mssql");
 require('dotenv').config();
 
 const config = {
-    server: process.env.DB_SERVER || "localhost",
+    server: process.env.DB_HOST || "localhost",
     database: process.env.DB_NAME || "test",
     options: {
         encrypt: false,
