@@ -46,11 +46,11 @@ jobs:
         run: |
           REM Navigate to Admin Dashboard folder
           cd %GITHUB_WORKSPACE%\Ad-displays-admin-dashboard
-          pm2 restart ad-dashboard || pm2 start npm --name ad-dashboard -- start
+          pm2 restart pm2.json || pm2 start pm2.json --name ad-dashboard
 
           REM Navigate to Socket app folder
           cd %GITHUB_WORKSPACE%\Ad-displays-socket
-          pm2 restart ad-socket || pm2 start npm --name ad-socket -- start
+          pm2 restart pm2.json || pm2 start pm2.json --name ad-socket
 
           REM Save PM2 process list
           pm2 save
