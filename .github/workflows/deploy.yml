@@ -44,14 +44,13 @@ jobs:
       - name: Start apps with PM2
         shell: cmd
         run: |
-          REM Navigate to GitHub workspace
-          cd %GITHUB_WORKSPACE%
+          REM Navigate to Admin Dashboard folder and start it
+          cd %GITHUB_WORKSPACE%\Ad-displays-admin-dashboard
+          pm2 start start-dashboard.cmd --name ad-dashboard --interpreter cmd
 
-          REM Start Admin Dashboard via CMD script
-          pm2 start Ad-displays-admin-dashboard\start-dashboard.cmd --name ad-dashboard --interpreter cmd
-
-          REM Start Socket App via CMD script
-          pm2 start Ad-displays-socket\start-socket.cmd --name ad-socket --interpreter cmd
+          REM Navigate to Socket app folder and start it
+          cd %GITHUB_WORKSPACE%\Ad-displays-socket
+          pm2 start start-socket.cmd --name ad-socket --interpreter cmd
 
           REM Save PM2 process list for startup
           pm2 save
